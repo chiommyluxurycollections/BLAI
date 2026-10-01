@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="BLAI — Built with purpose. Powered by intelligence.">
+
+    <title>BLAI | AI Assistant</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- App -->
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-icon">B</div>
+
+                <div>
+                    <h1>BLAI</h1>
+                    <p>AI Assistant</p>
+                </div>
+            </div>
+
+            <button class="new-chat-btn" id="newChatBtn">
+                + New Chat
+            </button>
+
+            <div class="chat-history" id="chatHistory">
+
+                <p class="history-title">
+                    Recent Chats
+                </p>
+
+            </div>
+
+            <div class="sidebar-bottom">
+
+                <p>
+                    Built with purpose.<br>
+                    Powered by intelligence.
+                </p>
+
+            </div>
+
+        </aside>
+
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+
+            <!-- Top Bar -->
+            <header class="chat-header">
+
+                <div class="mobile-brand">
+                    <div class="brand-icon">B</div>
+
+                    <div>
+                        <h2>BLAI</h2>
+                        <span>AI Assistant</span>
+                    </div>
+                </div>
+
+                <button
+                    class="menu-btn"
+                    id="menuBtn"
+                    aria-label="Open menu">
+                    ☰
+                </button>
+
+            </header>
+
+
+            <!-- Welcome Screen -->
+            <section class="welcome-screen" id="welcomeScreen">
+
+                <div class="welcome-icon">
+                    B
+                </div>
+
+                <p class="welcome-small">
+                    WELCOME TO
+                </p>
+
+                <h2>
+                    BLAI
+                </h2>
+
+                <p class="tagline">
+                    Built with purpose.<br>
+                    Powered by intelligence.
+                </p>
+
+                <p class="welcome-description">
+                    Your intelligent AI assistant,
+                    designed to help you think,
+                    create, learn and explore.
+                </p>
+
+            </section>
+
+
+            <!-- Messages -->
+            <section
+                class="messages"
+                id="messages">
+            </section>
+
+
+            <!-- Chat Input -->
+            <div class="input-area">
+
+                <form
+                    class="chat-form"
+                    id="chatForm">
+
+                    <input
+                        type="text"
+                        id="messageInput"
+                        placeholder="Message BLAI..."
+                        autocomplete="off"
+                        required>
+
+                    <button
+                        type="submit"
+                        id="sendBtn"
+                        aria-label="Send message">
+                        ➤
+                    </button>
+
+                </form>
+
+                <p class="input-note">
+                    BLAI can make mistakes.
+                    Check important information.
+                </p>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
