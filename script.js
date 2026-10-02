@@ -14,7 +14,7 @@ const sidebar = document.querySelector(".sidebar");
 // SEND MESSAGE
 // =========================
 
-chatForm.addEventListener("submit", function (event) {
+chatForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
@@ -36,17 +36,65 @@ chatForm.addEventListener("submit", function (event) {
     // Clear input
     messageInput.value = "";
 
+    // Disable input while BLAI responds
+    messageInput.disabled = true;
+
     // Show typing indicator
     const typingMessage = addTypingIndicator();
 
-    // Generate BLAI response
-    setTimeout(function () {
+    try {
 
+        // Send message to BLAI's secure backend
+        const response = await fetch(
+            "/.netlify/functions/chat",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    message: userMessage
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        // Remove typing indicator
         typingMessage.remove();
 
-        addAIMessage(generateResponse(userMessage));
+        if (!response.ok) {
+            throw new Error(
+                data.error || "BLAI could not respond."
+            );
+        }
 
-    }, 1200);
+        // Show BLAI's real AI response
+        addAIMessage(
+            data.reply || "I couldn't generate a response."
+        );
+
+    } catch (error) {
+
+        // Remove typing indicator
+        typingMessage.remove();
+
+        addAIMessage(
+            "I'm sorry 😭 I couldn't connect to my AI system right now. Please try again."
+        );
+
+        console.error("BLAI Error:", error);
+
+    } finally {
+
+        // Re-enable input
+        messageInput.disabled = false;
+
+        messageInput.focus();
+
+    }
 
 });
 
@@ -59,7 +107,8 @@ function addUserMessage(message) {
 
     const messageElement = document.createElement("div");
 
-    messageElement.className = "message user-message";
+    messageElement.className =
+        "message user-message";
 
     messageElement.innerHTML = `
         <div class="message-content">
@@ -79,9 +128,11 @@ function addUserMessage(message) {
 
 function addTypingIndicator() {
 
-    const messageElement = document.createElement("div");
+    const messageElement =
+        document.createElement("div");
 
-    messageElement.className = "message ai-message";
+    messageElement.className =
+        "message ai-message";
 
     messageElement.innerHTML = `
         <div class="ai-avatar">
@@ -109,9 +160,11 @@ function addTypingIndicator() {
 
 function addAIMessage(message) {
 
-    const messageElement = document.createElement("div");
+    const messageElement =
+        document.createElement("div");
 
-    messageElement.className = "message ai-message";
+    messageElement.className =
+        "message ai-message";
 
     messageElement.innerHTML = `
         <div class="ai-avatar">
@@ -119,7 +172,7 @@ function addAIMessage(message) {
         </div>
 
         <div class="message-content">
-            ${message}
+            ${formatAIResponse(message)}
         </div>
     `;
 
@@ -130,64 +183,13 @@ function addAIMessage(message) {
 
 
 // =========================
-// BLAI RESPONSES
+// FORMAT AI RESPONSE
 // =========================
 
-function generateResponse(message) {
+function formatAIResponse(message) {
 
-    const text = message.toLowerCase();
-
-
-    if (
-        text.includes("hello") ||
-        text.includes("hi") ||
-        text.includes("hey")
-    ) {
-
-        return "Hello! 👋🏾 I'm BLAI. How can I help you today?";
-
-    }
-
-
-    if (
-        text.includes("who are you") ||
-        text.includes("what are you")
-    ) {
-
-        return "I'm BLAI 🤖 — an AI assistant built with purpose and powered by intelligence.";
-
-    }
-
-
-    if (
-        text.includes("how are you")
-    ) {
-
-        return "I'm doing great and ready to help! 🤖✨ What would you like us to work on?";
-
-    }
-
-
-    if (
-        text.includes("thank")
-    ) {
-
-        return "You're welcome! 🤎 I'm always happy to help.";
-
-    }
-
-
-    if (
-        text.includes("bye")
-    ) {
-
-        return "Goodbye! 👋🏾 Come back whenever you need me.";
-
-    }
-
-
-    return "I'm still learning how to answer that properly. 🧠✨ For now, try asking me something like “Who are you?” or “How are you?”";
-
+    return escapeHTML(message)
+        .replace(/\n/g, "<br>");
 }
 
 
@@ -195,46 +197,58 @@ function generateResponse(message) {
 // NEW CHAT
 // =========================
 
-newChatBtn.addEventListener("click", function () {
+newChatBtn.addEventListener(
+    "click",
+    function () {
 
-    messages.innerHTML = "";
+        messages.innerHTML = "";
 
-    messages.style.display = "none";
+        messages.style.display = "none";
 
-    welcomeScreen.style.display = "flex";
+        welcomeScreen.style.display = "flex";
 
-    messageInput.value = "";
+        messageInput.value = "";
 
-    messageInput.focus();
+        messageInput.disabled = false;
 
-});
+        messageInput.focus();
+
+    }
+);
 
 
 // =========================
 // MOBILE SIDEBAR
 // =========================
 
-menuBtn.addEventListener("click", function () {
+menuBtn.addEventListener(
+    "click",
+    function () {
 
-    sidebar.classList.toggle("active");
+        sidebar.classList.toggle("active");
 
-});
+    }
+);
 
 
 // Close sidebar after clicking outside
-document.addEventListener("click", function (event) {
 
-    if (
-        sidebar.classList.contains("active") &&
-        !sidebar.contains(event.target) &&
-        !menuBtn.contains(event.target)
-    ) {
+document.addEventListener(
+    "click",
+    function (event) {
 
-        sidebar.classList.remove("active");
+        if (
+            sidebar.classList.contains("active") &&
+            !sidebar.contains(event.target) &&
+            !menuBtn.contains(event.target)
+        ) {
+
+            sidebar.classList.remove("active");
+
+        }
 
     }
-
-});
+);
 
 
 // =========================
@@ -243,7 +257,8 @@ document.addEventListener("click", function (event) {
 
 function scrollToBottom() {
 
-    messages.scrollTop = messages.scrollHeight;
+    messages.scrollTop =
+        messages.scrollHeight;
 
     window.scrollTo({
         top: document.body.scrollHeight,
@@ -259,7 +274,8 @@ function scrollToBottom() {
 
 function escapeHTML(text) {
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
 
     div.textContent = text;
 
