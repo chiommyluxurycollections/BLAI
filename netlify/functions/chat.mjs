@@ -50,9 +50,13 @@ export default async (req) => {
         const data = await response.json();
 
         if (!response.ok) {
+            console.error("OpenAI Error:", data);
+
             return new Response(
                 JSON.stringify({
-                    error: data.error?.message || "AI request failed"
+                    error:
+                        data.error?.message ||
+                        `OpenAI request failed with status ${response.status}`
                 }),
                 {
                     status: response.status,
@@ -77,9 +81,11 @@ export default async (req) => {
 
     } catch (error) {
 
+        console.error("Server Error:", error);
+
         return new Response(
             JSON.stringify({
-                error: "Something went wrong while connecting to BLAI."
+                error: error.message || "Server error"
             }),
             {
                 status: 500,
